@@ -64,6 +64,5 @@ function chaining_promises(){
         console.log(message);
     })
 }
-chaining_promises()
 
 module.exports = chaining_promises;
