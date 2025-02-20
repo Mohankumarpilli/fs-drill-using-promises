@@ -55,7 +55,7 @@ function unlink_files(path){
 }
 function Read_Lipsum(){
     return new Promise( (resolve,rejects) => {
-        read_files('./lipsum.txt').then( (data) => {
+        read_files('../lipsum.txt').then( (data) => {
             resolve(data);
         }).catch( (err) => {
             rejects(err);
@@ -153,20 +153,24 @@ function Delete_files(){
 }
 
     
-Read_Lipsum().then( (data) => {
-    console.log('1 lipsum file is readed');
-    return Upper_Case_Convertion(data);
-}).then( (data) => {
-    console.log('3',data);
-    return Lower_Case_Convertion()
-}).then( (data) => {
-    console.log('5',data);
-    return Sort_Both_Files();
-}).then( (data) => {
-    console.log('7',data);
-    return Delete_files();
-}).then((data) => {
-    console.log(data);
-}).catch( (err) => {
-    console.log(err);
-})
+function promise_chaining(){
+    Read_Lipsum().then( (data) => {
+        console.log('1 lipsum file is readed');
+        return Upper_Case_Convertion(data);
+    }).then( (data) => {
+        console.log('3',data);
+        return Lower_Case_Convertion()
+    }).then( (data) => {
+        console.log('5',data);
+        return Sort_Both_Files();
+    }).then( (data) => {
+        console.log('7',data);
+        return Delete_files();
+    }).then((data) => {
+        console.log(data);
+    }).catch( (err) => {
+        console.log(err);
+    })
+}
+
+module.exports = promise_chaining;

@@ -4,8 +4,6 @@
 //         1. Create a directory of random JSON files
 //         2. Delete those files simultaneously 
 
-const { default: fs } = await import("fs/promises")
-
 const fs = require('fs');
 
 function create_folder(){
@@ -53,14 +51,19 @@ function delete_files(data){
 
 let arr = ['1.json', '2.json' , '3.json'];
 
-create_folder().then( (data) => {
-    console.log(data)
-    return create_files(arr);
-}).then( (data) => {
-    console.log(data);
-    return delete_files(arr);
-}).then( (data) => {
-    console.log(data);
-}).catch((message) => {
-    console.log(message);
-})
+function chaining_promises(){
+    create_folder().then( (data) => {
+        console.log(data)
+        return create_files(arr);
+    }).then( (data) => {
+        console.log(data);
+        return delete_files(arr);
+    }).then( (data) => {
+        console.log(data);
+    }).catch((message) => {
+        console.log(message);
+    })
+}
+chaining_promises()
+
+module.exports = chaining_promises;
