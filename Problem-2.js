@@ -79,54 +79,51 @@ function Upper_Case_Convertion(data){
     })
 }
 
-function Lower_Case_Convertion(){
-    return new Promise( (resolve,reject) => {
-        read_files('./Upper_case_Content.txt').then( (lower_case) => {
-            const sentence =lower_case.toLowerCase().split('. ').sort().map( ele => {
-                if(ele.length> 0){
-                    return ele;
-                }
-            });
-            append_files('./filenames.txt','\nLower_case_Content.txt','4 Lower_case_content.txt name is added to filenames.txt').then( (data) => {
-                console.log(data);
-                write_files('./Lower_case_Content.txt', (sentence.join('\n')),'lower case file is been created').then( (data) =>{
-                    resolve(data);
-                }).catch( (err) => {
-                    reject(err);
-                })
-            }).catch((err) => {
-                reject(err)
-            })
-        }).catch( (err) => {
-            reject(err);
+function Lower_Case_Convertion() {
+
+    return read_files('./Upper_case_Content.txt')
+        .then((lower_case) => {
+            const sentence = lower_case.toLowerCase().split('. ').sort().filter(Boolean);
+
+            let appendPromise = append_files('./filenames.txt', '\nLower_case_Content.txt', '4 Lower_case_content.txt name is added to filenames.txt');
+            let writePromise = write_files('./Lower_case_Content.txt', sentence.join('\n'), 'Lower case file has been created');
+
+            return Promise.all([appendPromise, writePromise]);
         })
-    })
+        .then((results) => {
+            console.log(results[0]);
+            console.log(results[1]);
+            return "Lower case conversion completed successfully!";
+        })
+        .catch((err) => {
+            console.error("Error:", err);
+            throw err;
+        });
 }
 
-function Sort_Both_Files(){
-    return new Promise( (resolve,reject) => {
-        read_files('./Upper_case_Content.txt').then( (upperCase) => {
-            read_files('./Lower_case_Content.txt').then( (lowerCase) => {
-                const  combinedText = `${upperCase}. ${lowerCase}`;
+function Sort_Both_Files() {
+    return new Promise((resolve, reject) => {
+        Promise.all([
+            read_files('./Upper_case_Content.txt'),
+            read_files('./Lower_case_Content.txt')
+        ])
+        .then(([upperCase, lowerCase]) => {
+            const combinedText = `${upperCase}. ${lowerCase}`;
+            let new_data = combinedText.toLowerCase().split(' ').sort();
 
-                let new_data = combinedText.toLowerCase().split(' ').sort();
-                append_files('./filenames.txt','\nSorted_files.txt','6 sorted_files.txt name is added to filenames.txt').then( (data) => {
-                    console.log(data);
-                    write_files('./Sorted_files.txt',(new_data.join('\n')),'file Sorted is created').then( (data) => {
-                        resolve(data);
-                    }).catch( (err) => {
-                        reject(err);
-                    })
-                }).catch( (err) => {
-                    reject(err);
-                })
-            }).catch( (err) => {
-                reject(err);
-            })
-        }).catch( (err) => {
-            reject(err);
+            let appendPromise = append_files('./filenames.txt', '\nSorted_files.txt', '6 sorted_files.txt name is added to filenames.txt');
+            let writePromise = write_files('./Sorted_files.txt', new_data.join('\n'), 'file Sorted is created');
+
+            return Promise.all([appendPromise, writePromise]);
         })
-    })
+        .then(([appendResult, writeResult]) => {
+            console.log(appendResult);
+            resolve(writeResult);
+        })
+        .catch((err) => {
+            reject(err);
+        });
+    });
 }
 
 function Delete_files(){
