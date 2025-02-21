@@ -8,7 +8,7 @@ const fs = require('fs');
 
 function create_folder(){
     return new Promise( (resolve,rejects) => {
-        fs.mkdir('./randomFolder', (err) => {
+        fs.mkdir('./randomFolder', {recursive : true} ,(err) => {
             if(err){
                 rejects(err.message);
                 return;
@@ -21,31 +21,39 @@ function create_folder(){
 
 function create_files(data){
     return new Promise( (resolve,reject) => {
+        let count = 0;
         for(let ele of data){
             fs.writeFile(`./randomFolder/${ele}`,`hello ${ele}`,(err) => {
                 if(err){
                     reject(err.message);
                     return;
                 }
+                console.log(ele,'file is created');
+                count++;
+                if(count==3){
+                    resolve('files created');
+                }
             });
-            console.log(ele,'file is created');
         }
-        resolve('files created');
     })
 }
 
 function delete_files(data){
     return new Promise( (resolve,reject) => {
+        let count = 0;
         for(let ele = 0; ele < data.length; ele++){
             fs.unlink(`./randomFolder/${data[ele]}`, err => {
                 if(err){
                     reject(err.message);
                     return;
                 }
+                console.log(arr[ele],'file is deleted');
+                count++;
+                if(count==3){
+                    resolve('files created');
+                }
             })
-            console.log(arr[ele],'file is deleted');
         }
-        resolve('files deleted');
     })
 }
 
